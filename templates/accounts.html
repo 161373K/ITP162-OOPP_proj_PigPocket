@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank Accounts</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <link rel="stylesheet" href="/static/css/account.css">
+    <script src="/static/js/account.js"></script>
+
+    <style>
+        *{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .wrapper{
+            width: 150px;
+            margin: 5% auto;
+        }
+
+        .single-wrapper{
+            width: 100%;
+            background-color: #d9d9d9;
+        }
+        .accountBar{
+            padding-right: 60px;
+            line-height: 30px;
+        }
+        .balanceBar{
+            width: 100%;
+            padding: 10% 0;
+            background-color: green;
+        }
+
+        .filterSelection{
+            display: inline-block;
+            margin-right: 5%;
+        }
+
+        .rowHighlight:hover{
+            background-color: #f5f5f5;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            margin-left: 15%;
+        }
+
+        th, td {
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        td{
+            padding: 20%;
+        }
+
+        .dropbtn{
+            width: 130%;
+        }
+
+        .dropdown {
+            position: relative;
+            float: right
+        }
+
+        #myDropdown {
+            display: none;
+            position: absolute;
+            border: 1px solid lightgrey;
+            background-color: #f1f1f1;
+        }
+
+        #myDropdown2 {
+            display: none;
+            position: absolute;
+            border: 1px solid lightgrey;
+            background-color: #f1f1f1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {color: lightpink}
+
+        .dropdown-content2 a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content2 a:hover {color: lightpink}
+
+.show {display:block;}
+    </style>
+</head>
+<body>
+    {% extends 'layout.html' %}
+    {% block body %}
+        <div class="text-center">
+            <h1>Bank Accounts</h1>
+        </div>
+        <div style="margin-left: 15%">
+            <div class="filterSelection">
+                <div style="width: 110%;">
+                    <p style="float: left; margin-top: 3%">Bank Branch: </p>
+                    <div class="dropdown"> <button class="dropbtn" onclick="myFunction()">All <span class="caret"></span></button>
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="#">DBS</a>
+                        <a href="#">OCBC</a>
+                        <a href="#">UOB</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+
+            <div class="filterSelection">
+                <div style="width: 110%;">
+                    <p style="float: left; margin-top: 3%">Account type: </p>
+                    <div class="dropdown"> <button class="dropbtn" onclick="myFunction2()">All <span class="caret"></span></button>
+                    <div id="myDropdown2" class="dropdown-content">
+                        <a href="#">Savings</a>
+                        <a href="#">Current</a>
+                        <a href="#">Fixed Deposit</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <tr>
+                <th>Bank</th>
+                <th>Account no.</th>
+                <th>Account type</th>
+                <th>Interest(%)</th>
+                <th>Balance($)</th>
+                <th></th>
+            </tr>
+            {% for user in users %}
+            <tr class="rowHighlight">
+                <td>{{user.get_bankBranch()}}</td>
+                <td>{{user.get_bankNum()}}</td>
+                <td>{{user.get_accountType()}}</td>
+                <td>{{user.get_interestRate()}}</td>
+                <td class="accountBal">{{user.get_accountBal()}}</td>
+                <td>
+                    <div class="wrapper">
+                        <div class="single-wrapper">
+                            <div class="accountBar balanceBar"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div id="test2"></div>
+
+    <script>
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        function myFunction2() {
+            document.getElementById("myDropdown2").classList.toggle("show");
+        }
+
+        // this jquery function means that once the webpage(document) is loaded(ready), it will do the function which is
+        // to do the for loop.
+        $(document).ready(function(){
+            for (var index = 0; index < document.getElementsByClassName("accountBal").length;) {
+                var original = 1000;
+                var i = document.getElementsByClassName("accountBal")[index].innerHTML;
+                // var balance = parseFloat(i) - 500;
+                i = parseFloat(i);
+                var balPercent = (i/original) * 100;
+                if (i == 500.00)
+                {
+                    $('.balanceBar:eq('+index+')').css({'width': balPercent + "%"});
+                    document.getElementsByClassName("balanceBar")[index].style.backgroundColor = "red";
+                }
+                else
+                {
+                    $('.balanceBar:eq('+index+')').css({'width': balPercent + "%"});
+                    document.getElementsByClassName("balanceBar")[index].style.backgroundColor = "green";
+                }
+                index++
+            }
+        });
+    </script>
+    {% endblock %}
+
+</body>
+</html>
